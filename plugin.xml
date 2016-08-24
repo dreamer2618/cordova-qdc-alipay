@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  id="com.qdc.plugins.alipay"
+  id="cordova-plugin-proper-qdc-alipay"
   version="1.0.0">
   <name>Alipay</name>
 
@@ -53,6 +53,11 @@
           <key>CFBundleURLSchemes</key>
           <array>
             <string>qdcalipay</string>
+          </array>
+          <!--ios9 需要配置这个来打开支付宝app来支付 -->
+          <key>LSApplicationQueriesSchemes</key>
+          <array>
+            <string>alipay</string>
           </array>
         </dict>
       </array>
