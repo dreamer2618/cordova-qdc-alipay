@@ -1,6 +1,7 @@
 package com.qdc.plugins.alipay;
 
 import java.security.MessageDigest;
+import java.util.Map;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -86,37 +87,33 @@ public class Alipay extends CordovaPlugin {
 					// 构造PayTask 对象
 					PayTask alipay = new PayTask(cordova.getActivity());
 
-					// 查询终端设备是否存在支付宝认证账户
-					boolean isExist = alipay.checkAccountIfExist();
-					if (!isExist) {
-						LOG.e(LOG_TAG, "alipay account is not exists",
-								new IllegalStateException());
-						PluginResult result = new PluginResult(
-								PluginResult.Status.ERROR,
-								"alipay account is not exists");
-						result.setKeepCallback(true);
-						cbContext.sendPluginResult(result);
-						return;
-					}
-
 					// 调用支付接口
-					String resultMsg = alipay.pay(payInfo);
-					LOG.i(LOG_TAG, ">>>>>>>>>>支付回调通知>>>>>>>>>>>");
-					LOG.i(LOG_TAG, resultMsg);
-					LOG.i(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-
-					String[] resArr = resultMsg.split(";");
+//					String resultMsg = alipay.pay(payInfo,true);
+//					Map<String,String> resultMap=alipay.payV2(payInfo, true);
+//					LOG.i(LOG_TAG, ">>>>>>>>>>支付回调通知>>>>>>>>>>>");
+//					LOG.i(LOG_TAG, resultMsg);
+//					LOG.i(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+//
+//					String[] resArr = resultMsg.split(";");
+//					JSONObject resJo = new JSONObject();
+//					for (String res : resArr) {
+//						String[] ress = res.split("=");
+//						String key = ress[0];
+//						String value = ress[1].substring(1,
+//								ress[1].length() - 1);
+//						try {
+//							resJo.put(key, value);
+//						} catch (JSONException e) {
+//							LOG.e(LOG_TAG, e.getMessage(), e);
+//						}
+//					}
+					//切换为v2版本的接口，好像只是将返回值变成了map的区别
+					Map<String,String> resultMap=alipay.payV2(payInfo, true);
 					JSONObject resJo = new JSONObject();
-					for (String res : resArr) {
-						String[] ress = res.split("=");
-						String key = ress[0];
-						String value = ress[1].substring(1,
-								ress[1].length() - 1);
-						try {
-							resJo.put(key, value);
-						} catch (JSONException e) {
-							LOG.e(LOG_TAG, e.getMessage(), e);
-						}
+					try{
+						resJo=new JSONObject(resultMap);
+					}catch (Exception ex){
+						ex.printStackTrace();
 					}
 
 					PluginResult result = new PluginResult(
